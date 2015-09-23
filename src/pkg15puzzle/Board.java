@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class Board {
 
-    public enum Move {LEFT, UP, RIGHT, DOWN}
+    public enum Move {UP, LEFT, DOWN, RIGHT}
     
     public Board() {
         this(4,4);
@@ -42,6 +42,7 @@ public class Board {
         for (int i = 0; i<rows; i++){
             for (int j =  0; j<columns; j++){
                 tiles[i][j] = elements[((columns*i) + j)];
+                if (tiles[i][j] == 0){currentx = i; currenty = j;}
             }
         }
         parent = null;
@@ -142,27 +143,39 @@ public class Board {
     
     public void randomize(){
         Random r = new Random();
-        for (int i = 0; i<20; i++){
+        for (int i = 0; i<10; i++){
             int d = r.nextInt(4);
             switch (d){
                 case 0:
                     if (canMove(Move.LEFT))
                         move(Move.LEFT);
+                    else
+                        i--;
                     break;
                 case 1:
                     if (canMove(Move.UP))
                         move(Move.UP);
+                    else
+                        i--;
                     break;
                 case 2:
                     if (canMove(Move.RIGHT))
                         move(Move.RIGHT);
+                    else
+                        i--;
                     break;
                 case 3:
                     if (canMove(Move.DOWN))
                         move(Move.DOWN);
+                    else
+                        i--;
                     break;
             }
         }
+    }
+    
+    public int getTile(int x, int y){
+        return tiles[x][y];
     }
 
     public int getPathLength() {
@@ -185,7 +198,15 @@ public class Board {
         this.columns = columns;
     }
     
-    
+    public Position positionOf(int t){
+        for (int i =  0; i < rows; i++){
+            for (int j = 0; j < columns; j++){
+                if (tiles[i][j] == t)
+                    return new Position(i,j);
+            }
+        }
+        return null;
+    }
  
     private int rows;
     private int columns;
